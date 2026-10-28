@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colegio Montano - Digital Whiteboard | Reading 1st Grade</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        montanoBlue: '#1269A8',
+                        montanoYellow: '#F7D615',
+                        montanoGreen: '#54887D',
+                        montanoLightBlue: '#88B5C7',
+                        montanoOlive: '#A6B046',
+                        montanoBg: '#F2F5E9'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Verdana', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #F2F5E9; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-gray-800">
+
+    <!-- Top Header with Institution Identity & Fullscreen Button -->
+    <header class="bg-montanoBlue text-white shadow-md p-4 flex flex-wrap justify-between items-center border-b-4 border-montanoYellow">
+        <div class="flex items-center space-x-4">
+            <!-- Official Logo -->
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyEop0yf6lZ7Jk9MILZxF1rBj4Oqs5esyhIQ&s" alt="Colegio Montano Logo" class="h-12 w-12 object-contain bg-white rounded-full p-1 shadow">
+            <div>
+                <h1 class="text-xl font-bold tracking-wide">COLEGIO MONTANO — Interactive Digital Whiteboard</h1>
+                <p class="text-xs text-montanoLightBlue font-medium">Teacher: Nicole De León | 1st Grade Reading | Our World 1 (NatGeo)</p>
+            </div>
+        </div>
+        
+        <!-- Header Controls & Fullscreen Button -->
+        <div class="flex items-center space-x-3 mt-2 sm:mt-0">
+            <div class="bg-white/10 px-3 py-1.5 rounded-lg text-sm border border-white/20">
+                <span class="font-semibold text-montanoYellow">Dates:</span> May 20 - Aug 4 (7 Weeks | 1 Class per Week)
+            </div>
+            <button onclick="toggleFullscreen()" class="bg-montanoYellow text-gray-900 font-bold px-4 py-2 rounded-lg shadow hover:bg-yellow-400 transition flex items-center space-x-2 text-sm">
+                <i class="fa-solid fa-expand"></i>
+                <span>Fullscreen</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Navigation Bar for Lesson Weeks & Selector -->
+    <nav class="bg-montanoGreen text-white px-4 py-3 shadow-inner flex flex-wrap justify-between items-center gap-2">
+        <div class="flex items-center space-x-2">
+            <span class="font-bold text-sm bg-montanoOlive px-3 py-1 rounded">Select Class Session:</span>
+            <select id="classSelector" onchange="changeClassSession(this.value)" class="bg-white text-gray-800 text-sm font-semibold px-3 py-1.5 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-montanoYellow">
+                <option value="1">Week 1: We Love Teddy Bears (SB p. 104-105)</option>
+                <option value="2">Week 2: We Love Kites Workbook Practice (WB p. 74-76)</option>
+                <option value="3">Week 3: Extended Reading - A Shape Poem (SB p. 110-111)</option>
+                <option value="4">Week 4: Mid-Year Vacation & Review Bridge (Sharpen the Saw)</option>
+                <option value="5">Week 5: Sculptures Are Fun & Values (SB p. 124-126)</option>
+                <option value="6">Week 6: Polar Bears Advanced Writing & Practice (WB p. 88-90)</option>
+                <option value="7">Week 7: Unit Review, Team Presentations & Summative Showcase</option>
+            </select>
+        </div>
+        <div class="text-xs italic bg-white/10 px-3 py-1 rounded">
+            Leader in Me Habit: <span id="currentHabit" class="font-bold text-montanoYellow">Habit 2: Begin with the End in Mind</span>
+        </div>
+    </nav>
+
+    <!-- Main Workspace Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col gap-6">
+
+        <!-- Pedagogical Header Banner -->
+        <section class="bg-white rounded-2xl shadow-md p-4 border-l-8 border-montanoBlue flex flex-col md:flex-row justify-between gap-4">
+            <div class="space-y-1">
+                <div class="flex items-center space-x-2">
+                    <span class="bg-montanoLightBlue/30 text-montanoBlue font-bold text-xs px-2.5 py-1 rounded-full uppercase">CNB Guatemala Aligned</span>
+                    <span class="bg-montanoOlive/20 text-montanoOlive font-bold text-xs px-2.5 py-1 rounded-full uppercase">Our World 1 (NatGeo)</span>
+                </div>
+                <h2 id="sessionTitle" class="text-xl font-bold text-montanoBlue">Week 1: We Love Teddy Bears</h2>
+                <p id="sessionObjective" class="text-sm text-gray-600"><strong>Learning Objective:</strong> Students will identify details about teddy bear museums and toys by listening, reading, and answering comprehension questions.</p>
+            </div>
+            <div class="bg-montanoBg p-3 rounded-xl border border-montanoLightBlue/40 text-xs space-y-1 flex flex-col justify-center min-w-[240px]">
+                <p><strong>Competency:</strong> Applies reading comprehension strategies for short texts in English.</p>
+                <p><strong>Key Skills:</strong> Critical Thinking, Teamwork, Communication.</p>
+            </div>
+        </section>
+
+        <!-- Interactive Tabs for the 4 Montano Moments -->
+        <div class="flex flex-wrap gap-2 border-b-2 border-montanoLightBlue pb-2">
+            <button onclick="switchTab('tab1', this)" class="tab-btn px-5 py-2.5 rounded-xl font-bold text-sm bg-montanoBlue text-white shadow transition flex items-center space-x-2 active-tab">
+                <i class="fa-solid fa-sun text-montanoYellow"></i>
+                <span>I) Warm-up & Vocab Review (~5m)</span>
+            </button>
+            <button onclick="switchTab('tab2', this)" class="tab-btn px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-montanoBlue hover:bg-montanoLightBlue/20 shadow transition flex items-center space-x-2">
+                <i class="fa-solid fa-book-open text-montanoGreen"></i>
+                <span>II) Individual Work (20m)</span>
+            </button>
+            <button onclick="switchTab('tab3', this)" class="tab-btn px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-montanoBlue hover:bg-montanoLightBlue/20 shadow transition flex items-center space-x-2">
+                <i class="fa-solid fa-users text-montanoOlive"></i>
+                <span>III) Cooperative Work (30m)</span>
+            </button>
+            <button onclick="switchTab('tab4', this)" class="tab-btn px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-montanoBlue hover:bg-montanoLightBlue/20 shadow transition flex items-center space-x-2">
+                <i class="fa-solid fa-award text-montanoYellow"></i>
+                <span>IV) Plenary & Home Mission (15m)</span>
+            </button>
+        </div>
+
+        <!-- TAB CONTENT I: INTRODUCTION & WARM-UP -->
+        <div id="tab1" class="tab-content active bg-white rounded-2xl shadow-lg p-6 space-y-6 border border-montanoLightBlue/30">
+            <div class="flex items-center space-x-3 border-b pb-3">
+                <div class="bg-montanoBlue text-montanoYellow p-3 rounded-xl text-lg font-bold">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-montanoBlue">Part I) Warm-Up & Vocabulary Review (~5 minutes)</h3>
+                    <p class="text-xs text-gray-500">Vocabulary review from Units 6 & 7, brain spark & Leader in Me habit connection.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-montanoBg p-4 rounded-xl border border-montanoLightBlue/30 space-y-3">
+                    <h4 class="font-bold text-montanoBlue flex items-center space-x-2">
+                        <i class="fa-solid fa-book-bookmark text-montanoGreen"></i>
+                        <span>Vocabulary Review (Units 6 & 7)</span>
+                    </h4>
+                    <p id="vocabText" class="text-sm text-gray-700">Review toys and sculpture words: <em>teddy bear, kite, drum, ball, doll, robot, head, arms, legs, eyes, ears</em>.</p>
+                    <div class="bg-white p-3 rounded-lg border text-xs shadow-sm">
+                        <p class="font-semibold text-montanoGreen">Quick Game:</p>
+                        <p id="warmupGameDesc" class="text-gray-600 mt-1">"Flash Gesture Game": Teacher says a word (e.g., "robot"), students strike a robot pose instantly!</p>
+                    </div>
+                </div>
+
+                <div class="bg-montanoBg p-4 rounded-xl border border-montanoLightBlue/30 space-y-3">
+                    <h4 class="font-bold text-montanoBlue flex items-center space-x-2">
+                        <i class="fa-solid fa-seedling text-montanoOlive"></i>
+                        <span>Leader in Me Habit Connection</span>
+                    </h4>
+                    <p class="text-sm text-gray-700"><strong>Habit 3: Put First Things First.</strong> Organize your materials and attention before reading begins. Focus on listening attentively.</p>
+                    <div class="bg-white p-3 rounded-lg border text-xs shadow-sm">
+                        <p class="font-semibold text-montanoBlue">Guatemala CNB Context:</p>
+                        <p class="text-gray-600 mt-1">Connecting cultural appreciation of toys and objects with global themes in English.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT II: INDIVIDUAL WORK -->
+        <div id="tab2" class="tab-content bg-white rounded-2xl shadow-lg p-6 space-y-6 border border-montanoLightBlue/30">
+            <div class="flex items-center space-x-3 border-b pb-3">
+                <div class="bg-montanoGreen text-white p-3 rounded-xl text-lg font-bold">
+                    <i class="fa-solid fa-pencil"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-montanoGreen">Part II) Individual Work (20 minutes)</h3>
+                    <p class="text-xs text-gray-500">Student Book & Workbook exercises with self-check solution drawers.</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div id="individualTaskContent" class="bg-montanoBg p-5 rounded-xl border border-montanoLightBlue/30 space-y-3">
+                    <h4 id="indTaskTitle" class="font-bold text-montanoBlue text-base">Reading Task: Student Book Page 104-105</h4>
+                    <p id="indTaskDesc" class="text-sm text-gray-700">Read "We Love Teddy Bears". Circle Yes or No for the statements on page 105 (e.g., "There are teddy bear museums: yes/no"). Answer counting questions: "How many teddy bears are white?"</p>
+                </div>
+
+                <!-- Dropdown Accordion for Answer Key / Self-Check -->
+                <div class="border border-montanoLightBlue rounded-xl overflow-hidden shadow-sm">
+                    <button onclick="toggleAccordion('answerKey')" class="w-full bg-montanoLightBlue/20 px-4 py-3 text-left font-bold text-montanoBlue flex justify-between items-center hover:bg-montanoLightBlue/30 transition">
+                        <span class="flex items-center space-x-2">
+                            <i class="fa-solid fa-key text-montanoYellow"></i>
+                            <span>Hidden Answer Key / Guidance (For Self-Evaluation)</span>
+                        </span>
+                        <i id="keyIcon" class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div id="answerKey" class="hidden p-4 bg-white text-sm text-gray-700 space-y-2 border-t border-montanoLightBlue/30">
+                        <p id="answerKeyContent"><strong>Exercise 2 Answers:</strong> 1. yes | 2. no | 3. yes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT III: COOPERATIVE WORK -->
+        <div id="tab3" class="tab-content bg-white rounded-2xl shadow-lg p-6 space-y-6 border border-montanoLightBlue/30">
+            <div class="flex items-center space-x-3 border-b pb-3">
+                <div class="bg-montanoOlive text-white p-3 rounded-xl text-lg font-bold">
+                    <i class="fa-solid fa-people-group"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-montanoOlive">Part III) Cooperative Work / Teamwork (30 minutes)</h3>
+                    <p class="text-xs text-gray-500">Pair work, role assignment, and tangible product creation.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-montanoBg p-5 rounded-xl border border-montanoLightBlue/30 space-y-3">
+                    <h4 class="font-bold text-montanoBlue">Collaborative Mission</h4>
+                    <p id="coopMission" class="text-sm text-gray-700">Work in pairs. Partner A asks: <em>"What are your favorite toys?"</em> Partner B answers using the dialogue bubble (e.g., <em>"My teddy bear and my drum."</em>). Switch roles.</p>
+                    <div class="bg-white p-3 rounded-lg border text-xs">
+                        <p class="font-semibold text-montanoGreen">Assigned Roles:</p>
+                        <ul class="list-disc list-inside text-gray-600 mt-1 space-y-1">
+                            <li>Speaker 1: Interviewer</li>
+                            <li>Speaker 2: Presenter</li>
+                            <li>Both: Note-takers & Artists</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-montanoBg p-5 rounded-xl border border-montanoLightBlue/30 space-y-3">
+                    <h4 class="font-bold text-montanoBlue">Leader in Me & Value Integration</h4>
+                    <p class="text-sm text-gray-700"><strong>Habit 4: Think Win-Win</strong> and unit values (e.g., <em>Share your toys / Be clean</em>). Partners listen with empathy and respect each other's ideas.</p>
+                    <div class="bg-white p-3 rounded-lg border text-xs">
+                        <p class="font-semibold text-montanoOlive">Tangible Product:</p>
+                        <p class="text-gray-600 mt-1">A mini partner dialogue card or drawing to share in class.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT IV: PLENARY & CLOSING -->
+        <div id="tab4" class="tab-content bg-white rounded-2xl shadow-lg p-6 space-y-6 border border-montanoLightBlue/30">
+            <div class="flex items-center space-x-3 border-b pb-3">
+                <div class="bg-montanoYellow text-gray-900 p-3 rounded-xl text-lg font-bold">
+                    <i class="fa-solid fa-flag-checkered"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-montanoBlue">Part IV) Plenary & Home Investigation (15 minutes)</h3>
+                    <p class="text-xs text-gray-500">Mini-presentations, interactive trivia, evaluation rubric, and home investigation mission.</p>
+                </div>
+            </div>
+
+            <!-- Plenary Mini-Showcase & Interactive Trivia -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-montanoBg p-4 rounded-xl border space-y-2">
+                    <h4 class="font-bold text-montanoBlue text-sm">Interactive Trivia / Pasapalabra</h4>
+                    <p class="text-xs text-gray-700">Teacher leads a fast-paced vocabulary trivia game using flashcards. Teams earn points for correct pronunciation and sentence structure.</p>
+                </div>
+                <div class="bg-montanoBg p-4 rounded-xl border space-y-2 border-l-4 border-l-montanoYellow">
+                    <h4 class="font-bold text-montanoBlue text-sm">Take-Home Investigation Activity</h4>
+                    <p id="takeHomeActivity" class="text-xs text-gray-700"><strong>Home Mission:</strong> Ask a family member what their favorite toy was when they were a child. Draw it and bring it to share next class!</p>
+                </div>
+            </div>
+
+            <!-- Evaluation Rubric / Checklist -->
+            <div class="space-y-3 pt-2">
+                <h4 class="font-bold text-montanoBlue text-sm">Plenary Group Evaluation Checklist</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left border border-montanoLightBlue rounded-lg overflow-hidden">
+                        <thead class="bg-montanoBlue text-white">
+                            <tr>
+                                <th class="p-2.5">Evaluation Criteria (1st Grade)</th>
+                                <th class="p-2.5 text-center">Excellent (4)</th>
+                                <th class="p-2.5 text-center">Good (3)</th>
+                                <th class="p-2.5 text-center">In Progress (2)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-montanoLightBlue/30 bg-white">
+                            <tr>
+                                <td class="p-2.5 font-medium">1. Topic Mastery & Clear Explanation</td>
+                                <td class="p-2.5 text-center"><input type="radio" name="eval1" checked class="accent-montanoBlue"></td>
+                                <td class="p-2.5 text-center"><input type="radio" name="eval1"></td>
+                                <td class="p-2.5 text-center"><input type="radio" name="eval1"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium">2. Logic / Procedure Followed</td>
+                                <td class="p-2.5 text-center"><input type="radio" name="eval2" checked class="accent-montanoBlue"></td>
+                                <td class="p-2.5 text-center"><input type="radio" name="eval2"></td>
+                                <td class="p-2.5 text-center"><input type="radio" name="eval2"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium">3. Collaborative Work & Participation</td>
+                                <td class="p-2.5 text-center"><input type="radio" name="eval3" checked class="accent-montanoBlue"></td>
+                                <td class="p-2.5 text-center"><input type="radio" name="eval3"></td>
+                                <td class="p-2.5 text-center"><input type="radio" name="eval3"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium">4. Response to Plenary Questions</td>
+                                <td class="p-2.5 text-center"><input type="radio" name="eval4" checked class="accent-montanoBlue"></td>
+                                <td class="p-2.5 text-center"><input type="radio" name="eval4"></td>
+                                <td class="p-2.5 text-center"><input type="radio" name="eval4"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-montanoBlue text-white text-center py-3 text-xs mt-auto border-t-2 border-montanoYellow">
+        <p>Colegio Montano — Formando líderes con excelencia académica y valores (Our World 1, NatGeo & CNB Guatemala)</p>
+    </footer>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        // Tab Switching Logic
+        function switchTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('bg-montanoBlue', 'text-white', 'shadow');
+                el.classList.add('bg-white', 'text-montanoBlue', 'shadow');
+            });
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.remove('bg-white', 'text-montanoBlue');
+            btnElement.classList.add('bg-montanoBlue', 'text-white', 'shadow');
+        }
+
+        // Accordion Toggle for Answer Key
+        function toggleAccordion(id) {
+            const el = document.getElementById(id);
+            const icon = document.getElementById('keyIcon');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                el.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+
+        // Fullscreen Toggle
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Lesson Content Data for 7 Weekly Classes
+        const classData = {
+            1: {
+                title: "Week 1: We Love Teddy Bears",
+                objective: "Students will identify details about teddy bear museums and toys by listening, reading, and answering comprehension questions.",
+                habit: "Habit 2: Begin with the End in Mind",
+                vocab: "Toys: teddy bear, kite, drum, ball, doll, robot.",
+                warmupGame: "Flash Gesture Game: Teacher says a toy word, students strike a pose!",
+                indTitle: "Reading Task: Student Book Page 104-105",
+                indDesc: "Read 'We Love Teddy Bears'. Circle Yes/No for statements on page 105. Count white and black-nosed bears.",
+                answerKey: "Exercise 2 Answers: 1. yes | 2. no | 3. yes. Exercise 3: Full sentences on white bears.",
+                coop: "Work in pairs. Ask and answer: 'What are your favorite toys? My teddy bear and my drum.'",
+                takeHome: "Home Mission: Ask a family member what their favorite toy was when they were a child. Draw it!"
+            },
+            2: {
+                title: "Week 2: We Love Kites Workbook Practice",
+                objective: "Students will complete structured workbook activities reinforcing kite and toy vocabulary and sharing values.",
+                habit: "Habit 3: Put First Things First",
+                vocab: "Toys & Action verbs: want, don't want, kite, ball, drum, bike.",
+                warmupGame: "Simon Says: Use body parts and toy actions.",
+                indTitle: "Workbook Task: Page 74-76",
+                indDesc: "Complete sentences with 'I want a...' and 'I don't want a...'. Practice writing favorite toys on page 106.",
+                answerKey: "Workbook Page 74-76 Answer Guide: Match 'I want a bike' / 'I don't want a drum'.",
+                coop: "Think-Pair-Share: Discuss with a partner what toys you share with friends (Value: Share your toys).",
+                takeHome: "Home Mission: Point to 3 objects at home and state whether you want them or not in English."
+            },
+            3: {
+                title: "Week 3: Extended Reading - A Shape Poem",
+                objective: "Students will explore shape poems and identify desire statements in verse format.",
+                habit: "Habit 2: Begin with the End in Mind",
+                vocab: "Shapes & Objects: ball, circle, bike, kite, drum.",
+                warmupGame: "Shape Hunt: Find circular objects in the classroom.",
+                indTitle: "Extended Reading: Student Book Page 110-111",
+                indDesc: "Read 'A Shape Poem'. Answer True or False for statements on page 111 and create a shape poem drawing.",
+                answerKey: "Page 111 Answers: 1. True | 2. True | 3. False.",
+                coop: "Partner Reading: Take turns reading lines from the shape poem with proper intonation.",
+                takeHome: "Home Mission: Recite your mini shape poem to a family member."
+            },
+            4: {
+                title: "Week 4: Mid-Year Vacation & Review Bridge",
+                objective: "Students will review core vocabulary from Units 6 and 7 and recharge during mid-year break.",
+                habit: "Habit 7: Sharpen the Saw",
+                vocab: "All vocabulary from Units 6 & 7 toys and body parts.",
+                warmupGame: "Memory Match: Match toy pictures with word cards.",
+                indTitle: "Review Activity: Interactive Vocabulary Worksheet",
+                indDesc: "Complete review matching exercise for toys, body parts, and sculptures.",
+                answerKey: "Review Key: Match all vocabulary words with correct picture flashcards.",
+                coop: "Sharing Circle: Tell your partner one thing you enjoyed learning so far in Reading.",
+                takeHome: "Home Mission: Enjoy your mid-year vacation! Practice English vocabulary in everyday places."
+            },
+            5: {
+                title: "Week 5: Sculptures Are Fun & Values",
+                objective: "Students will learn vocabulary about art, sculptures, body parts, and animals (Fernando Botero & Jeff Koons).",
+                habit: "Habit 6: Synergize",
+                vocab: "Art & Anatomy: sculpture, artist, man, horse, dog, head, arms, legs, eyes, ears, big, small.",
+                warmupGame: "Statue Game: Freeze in funny sculpture poses when music stops.",
+                indTitle: "Reading & Writing: Student Book Page 124-126",
+                indDesc: "Examine Botero's 'Man on a Horse' and Koons' 'Balloon Dog'. Complete checking table on page 125 and costume writing on page 126.",
+                answerKey: "Page 125 Answers: Botero's horse has small head, big legs. Page 126: 'I'm a spider. I have eight legs.'",
+                coop: "Pair Discussion: Talk about your costume drawing and how you keep clean every day (Value: Be clean).",
+                takeHome: "Home Mission: Practice washing your hands thoroughly and explain 'Be Clean' to your family."
+            },
+            6: {
+                title: "Week 6: Polar Bears Advanced Writing & Practice",
+                objective: "Students will complete workbook exercises about polar bears and animal descriptions.",
+                habit: "Habit 1: Be Proactive",
+                vocab: "Animal features: polar bear, fur, paws, tail, white, swim, ice.",
+                warmupGame: "Animal Walk: Walk like a polar bear across the room.",
+                indTitle: "Workbook Task: Page 88-90",
+                indDesc: "Complete reading comprehension, labeling, and sentence writing exercises for polar bears.",
+                answerKey: "Workbook Page 88-90 Guide: Verify polar bear adjectives (big, strong, white, cold).",
+                coop: "Peer Editing: Read your polar bear sentences to a partner and check for capital letters and periods.",
+                takeHome: "Home Mission: Research one fun fact about polar bears with your parents."
+            },
+            7: {
+                title: "Week 7: Unit Review, Team Presentations & Summative Showcase",
+                objective: "Students will synthesize all learning from Unit 3 reading lessons in collaborative teams.",
+                habit: "Habit 3: Put First Things First",
+                vocab: "Full vocabulary review across Units 6 and 7.",
+                warmupGame: "Rapid Fire Vocabulary Quiz.",
+                indTitle: "Summative Self-Assessment & Portfolio",
+                indDesc: "Complete self-evaluation sticker chart for reading milestones and assemble review portfolio.",
+                answerKey: "Summative Portfolio: All workbook and student book completed pages checked.",
+                coop: "Plenary Showcase: Present team projects and favorite toy/sculpture presentations to classmates.",
+                takeHome: "Home Mission: Share your Reading Portfolio with your family and celebrate your success!"
+            }
+        };
+
+        // Update Class Session Content Dynamically
+        function changeClassSession(classId) {
+            const data = classData[classId];
+            if (!data) return;
+
+            document.getElementById('sessionTitle').innerText = data.title;
+            document.getElementById('sessionObjective').innerHTML = `<strong>Learning Objective:</strong> ${data.objective}`;
+            document.getElementById('currentHabit').innerText = data.habit;
+            document.getElementById('vocabText').innerHTML = `Review words: <em>${data.vocab}</em>`;
+            document.getElementById('warmupGameDesc').innerText = data.warmupGame;
+            document.getElementById('indTaskTitle').innerText = data.title.includes('Workbook') ? "Workbook Task Pages" : "Reading & Writing Task";
+            document.getElementById('indTaskDesc').innerText = data.indDesc;
+            document.getElementById('answerKeyContent').innerHTML = data.answerKey;
+            document.getElementById('coopMission').innerText = data.coop;
+            document.getElementById('takeHomeActivity').innerHTML = `<strong>Home Mission:</strong> ${data.takeHome}`;
+        }
+    </script>
+</body>
+</html>
